@@ -1,5 +1,5 @@
---Rele
-
---Mp 
-
---Josh
+--DimProduct
+--DimDate
+--DimCustomer
+--DimEmployee
+--FactSales

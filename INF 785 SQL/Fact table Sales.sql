@@ -1,4 +1,5 @@
-SELECT DISTINCT SOH.SalesOrderID AS SalesKey,OrderDate,DueDate,ShipDate,CustomerID,SalesPersonID,ProductID,OrderQty AS SalesQuantity,UnitPrice AS SalesAmount,UnitPriceDiscount AS DiscountAmount
+
+SELECT DISTINCT SOD.SalesOrderDetailID AS SalesKey,OrderDate AS OrderDateKey,DueDate AS DueDateKey,ShipDate AS ShipDateKey,CustomerID AS CustomerKey,SalesPersonID AS SalesPersonKey,ProductID AS ProductKey,OrderQty AS SalesQuantity,UnitPrice AS SalesAmount,UnitPriceDiscount AS DiscountAmount
 FROM Sales.SalesOrderHeader AS SOH
 INNER JOIN Sales.SalesOrderDetail AS SOD ON SOH.SalesOrderID = SOD.SalesOrderID
 WHERE SOH.SalesOrderID IS NOT NULL
@@ -11,4 +12,4 @@ WHERE SOH.SalesOrderID IS NOT NULL
   AND SOD.OrderQty IS NOT NULL
   AND SOD.UnitPrice IS NOT NULL
   AND SOD.UnitPriceDiscount IS NOT NULL
-  ORDER BY SOH.SalesOrderID;
+  ORDER BY SOD.SalesOrderDetailID;

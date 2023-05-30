@@ -109,11 +109,11 @@ ROW_NUMBER() over (partition by P.BusinessEntityID ORDER BY A.AddressID DESC) as
 FROM
 AdventureWorks2019.Person.Person as p  
 JOIN AdventureWorks2019.Sales.Customer AS C ON P.BusinessEntityID = C.PersonID
-INNER JOIN Person.BusinessEntity AS B ON P.BusinessEntityID = B.BusinessEntityID
-INNER JOIN Person.BusinessEntityAddress AS BA ON B.BusinessEntityID = BA.BusinessEntityID
-INNER JOIN Person.Address AS A ON BA.AddressID = A.AddressID
-INNER JOIN Person.StateProvince AS S ON S.StateProvinceID = A.StateProvinceID
-INNER JOIN Person.CountryRegion AS CR ON CR.CountryRegionCode = S.CountryRegionCode
+INNER JOIN AdventureWorks2019.Person.BusinessEntity AS B ON P.BusinessEntityID = B.BusinessEntityID
+INNER JOIN AdventureWorks2019.Person.BusinessEntityAddress AS BA ON B.BusinessEntityID = BA.BusinessEntityID
+INNER JOIN AdventureWorks2019.Person.Address AS A ON BA.AddressID = A.AddressID
+INNER JOIN AdventureWorks2019.Person.StateProvince AS S ON S.StateProvinceID = A.StateProvinceID
+INNER JOIN AdventureWorks2019.Person.CountryRegion AS CR ON CR.CountryRegionCode = S.CountryRegionCode
 
 ) as CustomerStaging
 WHERE CustomerStaging.RowNum = 1
@@ -121,10 +121,10 @@ WHERE CustomerStaging.RowNum = 1
 --DimEmployee
 INSERT INTO DimEmployee(EmployeeKey,FirstName,LastName,JobTitle, Department)
 SELECT DISTINCT P.BusinessEntityID AS EmployeeKey, P.FirstName, P.LastName, E.JobTitle, D.Name AS Department
-FROM Person.Person AS P
-INNER JOIN HumanResources.Employee AS E ON P.BusinessEntityID = E.BusinessEntityID
-INNER JOIN HumanResources.EmployeeDepartmentHistory AS EDH ON P.BusinessEntityID = EDH.BusinessEntityID
-INNER JOIN HumanResources.Department AS D ON D.DepartmentID = EDH.DepartmentID
+FROM AdventureWorks2019.Person.Person AS P
+INNER JOIN [AdventureWorks2019].[HumanResources].[Employee] AS E ON P.[BusinessEntityID] = E.[BusinessEntityID]
+INNER JOIN [AdventureWorks2019].[HumanResources].[EmployeeDepartmentHistory] AS EDH ON P.[BusinessEntityID] = EDH.[BusinessEntityID]
+INNER JOIN [AdventureWorks2019].[HumanResources].[Department] AS D ON D.DepartmentID = EDH.[DepartmentID]
 WHERE P.FirstName IS NOT NULL
   AND P.LastName IS NOT NULL 
   AND E.JobTitle IS NOT NULL

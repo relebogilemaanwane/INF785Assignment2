@@ -2,13 +2,13 @@
 
 SELECT A.ProductSubcategoryID, A.Name AS PSC, B.Name AS PC
 INTO StgProductCategory
-FROM Production.ProductSubcategory AS A
-JOIN Production.ProductCategory AS B
+FROM AdventureWorks2019.Production.ProductSubcategory AS A
+JOIN AdventureWorks2019.Production.ProductCategory AS B
 ON A.ProductCategoryID = B.ProductCategoryID
 
 INSERT INTO DimProduct (ProductKey, ProductName, ProductCategory, ProductSubcategory, ListPrice)
 SELECT P.ProductID, P.Name, SPC.PC, SPC.PSC, ListPrice
-FROM Production.Product AS P
+FROM AdventureWorks2019.Production.Product AS P
 INNER JOIN StgProductCategory AS SPC
 ON P.ProductSubcategoryID = SPC.ProductSubcategoryID
 
@@ -16,15 +16,15 @@ ON P.ProductSubcategoryID = SPC.ProductSubcategoryID
 
 SELECT DISTINCT S.OrderDate
 INTO StageOrderDate
-FROM Sales.SalesOrderHeader AS S
+FROM AdventureWorks2019.Sales.SalesOrderHeader AS S
 
 SELECT DISTINCT S.DueDate
 INTO StageDueDate
-FROM Sales.SalesOrderHeader AS S
+FROM AdventureWorks2019.Sales.SalesOrderHeader AS S
 
 SELECT DISTINCT S.ShipDate
 INTO StageShipDate
-FROM Sales.SalesOrderHeader AS S
+FROM AdventureWorks2019.Sales.SalesOrderHeader AS S
 
 INSERT INTO DimDate (DateKey, FullDate, DayOfWeek, MonthName, QuarterName, Year)
 SELECT
@@ -122,9 +122,9 @@ WHERE CustomerStaging.RowNum = 1
 INSERT INTO DimEmployee(EmployeeKey,FirstName,LastName,JobTitle, Department)
 SELECT DISTINCT P.BusinessEntityID AS EmployeeKey, P.FirstName, P.LastName, E.JobTitle, D.Name AS Department
 FROM AdventureWorks2019.Person.Person AS P
-INNER JOIN [AdventureWorks2019].[HumanResources].[Employee] AS E ON P.[BusinessEntityID] = E.[BusinessEntityID]
-INNER JOIN [AdventureWorks2019].[HumanResources].[EmployeeDepartmentHistory] AS EDH ON P.[BusinessEntityID] = EDH.[BusinessEntityID]
-INNER JOIN [AdventureWorks2019].[HumanResources].[Department] AS D ON D.DepartmentID = EDH.[DepartmentID]
+INNER JOIN AdventureWorks2019.HumanResources.Employee AS E ON P.BusinessEntityID = E.BusinessEntityID
+INNER JOIN AdventureWorks2019.HumanResources.EmployeeDepartmentHistory AS EDH ON P.BusinessEntityID = EDH.BusinessEntityID
+INNER JOIN AdventureWorks2019.HumanResources.Department AS D ON D.DepartmentID = EDH.DepartmentID
 WHERE P.FirstName IS NOT NULL
   AND P.LastName IS NOT NULL 
   AND E.JobTitle IS NOT NULL

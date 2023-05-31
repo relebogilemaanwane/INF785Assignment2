@@ -132,3 +132,34 @@ WHERE P.FirstName IS NOT NULL
   ORDER BY P.BusinessEntityID;
   
 --FactSales
+SELECT S.DateKey, S.FullDate
+INTO StgFtOrderDate
+FROM DimDate AS S
+
+SELECT S.DateKey, S.FullDate
+INTO StgFtDueDate
+FROM DimDate AS S
+
+SELECT S.DateKey, S.FullDate
+INTO StgFtShipDate
+FROM DimDate AS S
+
+SELECT S.SalesOrderDetailID, S.ProductID, S.UnitPriceDiscount, S.UnitPrice*S.OrderQty AS SalesAmount, S.OrderQty, B.DueDate, B.ShipDate, B.OrderDate, B.CustomerID, B.SalesPersonID
+INTO Stg_Sales
+FROM Sales.SalesOrderDetail AS S
+INNER JOIN Sales.SalesOrderHeader AS B
+ON S.SalesOrderID = B.SalesOrderID
+
+INSERT INTO Sales (SalesKey, OrderDateKey, DueDateKey,ShipDateKey,ProductKey, EmployeeKey, SalesQuantity,SalesAmount, DiscountAmount)
+SELECT A.SalesOrderDetailID, C.DateKey,D.DateKey,E.DateKey, B.ProductKey, DE.EmployeeKey, A.OrderQty, A.SalesAmount, A.UnitPriceDiscount
+FROM Stg_Sales AS A
+INNER JOIN DimProduct AS B
+ON A.ProductID = B.ProductKey
+INNER JOIN StgFtOrderDate AS C
+ON A.OrderDate = C.FullDate
+INNER JOIN StgFtDueDate AS D
+ON A.DueDate = D.FullDate
+INNER JOIN StgFtShipDate AS E
+ON A.ShipDate = E.FullDate
+INNER JOIN DimEmployee AS DE
+ON DE.EmployeeKey = A.SalesPersonID
